@@ -1,4 +1,4 @@
-# 💰 Sistema de Processamento de Pagamentos
+# Sistema de Processamento de Pagamentos
 
 ## Requisitos Funcionais
 

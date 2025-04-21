@@ -1,4 +1,4 @@
-# 📈 Sistema de Analytics em Tempo Real
+# Sistema de Analytics em Tempo Real
 
 ## Requisitos Funcionais
 

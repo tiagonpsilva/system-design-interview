@@ -1,4 +1,4 @@
-# 📺 Sistema de Streaming de Vídeo
+# Sistema de Streaming de Vídeo
 
 ## Requisitos Funcionais
 

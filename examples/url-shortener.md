@@ -1,4 +1,4 @@
-# 🔗 Sistema de Encurtamento de URLs
+# Sistema de Encurtamento de URLs
 
 ## Requisitos Funcionais
 

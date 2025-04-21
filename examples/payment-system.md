@@ -1,4 +1,4 @@
-# 💳 Sistema de Pagamento
+# Sistema de Pagamento
 
 ## Requisitos Funcionais
 

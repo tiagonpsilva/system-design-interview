@@ -1,4 +1,4 @@
-# 💬 Sistema de Chat
+# Sistema de Chat
 
 ## Requisitos Funcionais
 
