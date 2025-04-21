@@ -1,90 +1,248 @@
-# Sistema de Busca
+# 🔍 Design de Sistema: Search System
 
-## 1. Requisitos
+```mermaid
+graph TD
+    subgraph Client Layer
+        A[Web Client]
+        B[Mobile Client]
+        C[API Client]
+    end
 
-### Funcionais
+    subgraph API Layer
+        D[API Gateway]
+        E[Load Balancer]
+    end
+
+    subgraph Search Services
+        F[Query Service]
+        G[Index Service]
+        H[Analytics Service]
+        I[Suggestion Service]
+    end
+
+    subgraph Processing Layer
+        J[Document Processor]
+        K[Text Analyzer]
+        L[Ranking Engine]
+    end
+
+    subgraph Storage Layer
+        M[(Elasticsearch)]
+        N[(Redis Cache)]
+        O[(Document Store)]
+        P[(Analytics DB)]
+    end
+
+    subgraph Queue Layer
+        Q[Kafka - Indexing]
+        R[Kafka - Analytics]
+    end
+
+    subgraph Monitoring
+        S[Prometheus]
+        T[Grafana]
+        U[Alert Manager]
+    end
+
+    A & B & C --> D
+    D --> E
+    E --> F & H & I
+    F --> N
+    F --> M
+    G --> J
+    J --> K
+    K --> L
+    L --> M
+    G --> Q
+    Q --> M
+    H --> R
+    R --> P
+    I --> N
+    F & G & H & I --> S
+    S --> T --> U
+```
+
+## 1. Requisitos & Escopo
+
+### Perguntas Chave
+- Sistema de busca full-text para documentos
+- Suporte a múltiplos tipos de conteúdo
+- Necessidade de busca em tempo real
+- Alta disponibilidade e baixa latência
+
+### Requisitos Funcionais
 - Busca full-text
-- Filtros avançados
+- Auto-complete/sugestões
+- Filtros e facets
 - Ranking de resultados
-- Auto-complete
-- Correção ortográfica
+- Indexação em tempo real
+- Analytics de busca
 
-### Não Funcionais
-- Latência <200ms
-- Alta disponibilidade
-- Resultados relevantes
-- Escalabilidade
+### Requisitos Não-Funcionais
+- Latência < 200ms p99
+- Disponibilidade 99.99%
+- Consistência eventual
+- Escalabilidade horizontal
+- Tolerância a falhas
 
-## 2. Estimativas
+### Estimativas
+- 100M documentos
+- 10TB dados total
+- 10K QPS
+- 1K writes/s
+- 100ms max latência
 
-### Tráfego
-- 10M buscas/dia
-- Pico de 1k queries/segundo
-- 100M documentos indexados
-
-### Armazenamento
-- Índice: 50GB
-- Documentos: 500GB
-- Cache: 10GB
-
-## 3. Design do Sistema
+## 2. Design de Alto Nível
 
 ### Componentes Principais
-1. Query Parser
-2. Search Engine
-3. Indexador
-4. Ranker
-5. Cache Layer
+- Query Service
+- Index Service
+- Document Store
+- Cache Layer
+- Analytics Service
+- API Gateway
 
 ### Fluxo de Dados
-1. Query recebida
-2. Parsing e análise
-3. Busca no índice
-4. Ranking
-5. Retorno dos resultados
+```
+[Cliente] -> [API Gateway]
+  -> [Query Service + Cache]
+    -> [Index Service]
+      -> [Document Store]
+```
 
-## 4. Tecnologias Sugeridas
+### APIs
+```
+# Search Service API
+POST /search
+{
+  "query": string,
+  "filters": object,
+  "page": int,
+  "size": int
+}
 
-### Search Engine
+# Document Service API
+POST /documents
+PUT /documents/{id}
+DELETE /documents/{id}
+GET /documents/{id}
+```
+
+### Modelo de Dados
+```
+# Elasticsearch Document
+{
+  "id": string,
+  "content": text,
+  "metadata": {
+    "type": string,
+    "created_at": timestamp,
+    "tags": array
+  },
+  "settings": {
+    "analysis": {
+      "analyzer": "custom"
+    }
+  }
+}
+```
+
+## 3. Design Detalhado
+
+### Tecnologias
 - Elasticsearch
-- Solr
-- Typesense
+- Redis para cache
+- Kafka para ingestão
+- gRPC para comunicação
+- Prometheus + Grafana
 
-### Storage
-- PostgreSQL
-- Redis
-- S3
+### Padrões de Design
+- Write-behind caching
+- Circuit breaker
+- Bulk indexing
+- Throttling
+- CQRS
 
-### Processing
-- Python/NLTK
-- Apache Lucene
-- TensorFlow
+### Trade-offs
+- Consistência vs Latência
+  - Eventual consistency
+  - Async indexing
+- Precisão vs Performance
+  - Sharding
+  - Caching
+- Complexidade vs Features
+  - Custom ranking
+  - Analytics
 
-## 5. Considerações
+## 4. Escalabilidade
 
-### Performance
-- Caching
-- Sharding
+### Gargalos
+- Index updates
+- Query complexity
+- Cache hit ratio
+- Network I/O
+
+### Soluções
+- Index sharding
 - Query optimization
-
-### Qualidade
-- Relevance scoring
-- A/B testing
-- User feedback
-
-### Escalabilidade
-- Replicação
+- Cache warming
+- CDN/Edge caching
 - Load balancing
-- Auto-scaling
 
-## 6. Trade-offs
+### Custos
+- Storage: ~$5000/mês
+- Compute: ~$8000/mês
+- Network: ~$2000/mês
+- Total: ~$15000/mês
 
-### Prós
-- Alta performance
-- Resultados relevantes
-- Flexibilidade
+## 5. Resiliência
 
-### Contras
-- Complexidade
-- Custo computacional
-- Manutenção
+### Pontos de Falha
+- Index corruption
+- Cache inconsistency
+- Network partition
+- Query timeout
+
+### Mitigações
+- Multi-AZ deployment
+- Index replication
+- Circuit breakers
+- Fallback caching
+- Monitoring
+
+### Métricas
+- Query latency
+- Index freshness
+- Cache hit ratio
+- Error rates
+- Resource usage
+
+## 6. Evolução
+
+### MVP
+- Basic full-text search
+- Simple ranking
+- REST API
+- Single region
+- Basic monitoring
+
+### Melhorias Futuras
+- ML-based ranking
+- Personalization
+- Multi-region
+- Real-time analytics
+- A/B testing
+
+### Alternativas
+- Solr vs Elasticsearch
+- Custom vs managed
+- Sync vs async
+- Monolith vs microservices
+
+## Notas & Observações
+
+- Otimizar para latência
+- Monitorar qualidade
+- Manter índices saudáveis
+- Validar relevância
+- Planejar capacidade
