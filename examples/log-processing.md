@@ -1,90 +1,80 @@
-# Sistema de Processamento de Logs
+# 📊 Design de Sistema: Sistema de Processamento de Logs
 
-## 1. Requisitos
+```mermaid
+graph TD
+    subgraph Log Sources
+        A[Applications]
+        B[Services]
+        C[Infrastructure]
+        D[Security]
+    end
 
-### Funcionais
-- Coleta de logs
-- Processamento em tempo real
-- Busca e filtragem
-- Alertas
-- Retenção de dados
+    subgraph Collection Layer
+        E[Vector Agents]
+        F[Fluentd Collectors]
+        G[Filebeat]
+    end
 
-### Não Funcionais
-- Escalabilidade horizontal
-- Durabilidade dos dados
-- Baixa latência (<1s)
-- Alta disponibilidade
+    subgraph Ingestion Layer
+        H[Kafka Cluster]
+        I[Schema Validator]
+        J[Rate Limiter]
+    end
 
-## 2. Estimativas
+    subgraph Processing Layer
+        K[Flink Streaming]
+        L[Parser Service]
+        M[Enrichment Service]
+    end
 
-### Tráfego
-- 50k eventos/segundo
-- 4.3B eventos/dia
-- 100TB dados/mês
+    subgraph Storage Layer
+        N[(Elasticsearch - Hot)]
+        O[(S3/Parquet - Cold)]
+        P[(Redis - Cache)]
+        Q[Prometheus - Metrics]
+    end
 
-### Armazenamento
-- Log médio: 1KB
-- Retenção: 6 meses
-- Total: 600TB
+    subgraph Query Layer
+        R[Search Service]
+        S[Analytics Service]
+        T[Archival Service]
+    end
 
-## 3. Design do Sistema
+    subgraph Presentation Layer
+        U[API Gateway]
+        V[Kibana/Grafana]
+        W[Alert Manager]
+    end
 
-### Componentes Principais
-1. Coletores de Log
-2. Message Queue
-3. Processadores
-4. Storage Engine
-5. Search Engine
+    A & B & C & D --> E & F & G
+    E & F & G --> H
+    H --> I --> J
+    J --> K
+    K --> L --> M
+    
+    M --> N & O
+    M --> Q
+    K --> P
+    
+    R --> N & P
+    S --> N & O & Q
+    T --> O
+    
+    U --> R & S & T
+    V --> R & S
+    W --> S
 
-### Fluxo de Dados
-1. Geração de logs
-2. Coleta e agregação
-3. Processamento
-4. Indexação
-5. Armazenamento
+    style A fill:#f9f,stroke:#333,stroke-width:2px
+    style B fill:#f9f,stroke:#333,stroke-width:2px
+    style C fill:#f9f,stroke:#333,stroke-width:2px
+    style D fill:#f9f,stroke:#333,stroke-width:2px
+    style E fill:#bbf,stroke:#333,stroke-width:2px
+    style F fill:#bbf,stroke:#333,stroke-width:2px
+    style G fill:#bbf,stroke:#333,stroke-width:2px
+    style H fill:#dfd,stroke:#333,stroke-width:2px
+    style I fill:#dfd,stroke:#333,stroke-width:2px
+    style J fill:#dfd,stroke:#333,stroke-width:2px
+```
 
-## 4. Tecnologias Sugeridas
-
-### Coleta
-- Fluentd
-- Logstash
-- Vector
-
-### Processamento
-- Kafka
-- Apache Spark
-- Apache Flink
-
-### Armazenamento
-- Elasticsearch
-- ClickHouse
-- S3
-
-## 5. Considerações
-
-### Escalabilidade
-- Sharding
-- Particionamento
-- Load balancing
-
-### Performance
-- Compressão
-- Indexação
-- Caching
-
-### Segurança
-- Criptografia
-- Auditoria
-- Controle de acesso
-
-## 6. Trade-offs
-
-### Prós
-- Escalabilidade
-- Flexibilidade
-- Durabilidade
-
-### Contras
-- Custo de storage
-- Complexidade
-- Overhead de processamento
+## 1. Requisitos & Escopo
+...
