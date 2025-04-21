@@ -1,4 +1,4 @@
-# Design de Sistema: Sistema de Mensagens em Tempo Real
+# ⚡ Design de Sistema: Real-time Messaging
 
 ## 1. Requisitos & Escopo
 

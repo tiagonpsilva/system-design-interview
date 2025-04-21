@@ -1,4 +1,4 @@
-# Design de Sistema: Sistema de Busca
+# 🔍 Design de Sistema: Search System
 
 ## 1. Requisitos & Escopo
 

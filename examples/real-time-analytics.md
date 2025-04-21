@@ -1,4 +1,4 @@
-# Design de Sistema: Sistema de Análise em Tempo Real
+# 📈 Design de Sistema: Real-time Analytics
 
 ## 1. Requisitos & Escopo
 

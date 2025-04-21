@@ -1,4 +1,4 @@
-# Design de Sistema: Chat em Tempo Real
+# 💬 Design de Sistema: Chat System
 
 ## 1. Requisitos & Escopo
 

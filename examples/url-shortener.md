@@ -1,4 +1,4 @@
-# Design de Sistema: URL Shortener
+# 🔗 Design de Sistema: URL Shortener
 
 ## 1. Requisitos & Escopo
 

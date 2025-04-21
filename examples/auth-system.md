@@ -1,4 +1,4 @@
-# Design de Sistema: Sistema de Autenticação e Autorização
+# 🔒 Design de Sistema: Sistema de Autenticação e Autorização
 
 ## 1. Requisitos & Escopo
 

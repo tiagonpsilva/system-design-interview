@@ -1,4 +1,4 @@
-# Design de Sistema: Plataforma de Streaming de Vídeo
+# 🎥 Design de Sistema: Video Streaming
 
 ## 1. Requisitos & Escopo
 

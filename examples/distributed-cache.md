@@ -1,4 +1,4 @@
-# Design de Sistema: Cache Distribuído
+# 🗄️ Design de Sistema: Distributed Cache
 
 ## 1. Requisitos & Escopo
 

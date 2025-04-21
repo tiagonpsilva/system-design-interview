@@ -69,94 +69,17 @@ Entrevistas de system design são desafiadoras por várias razões:
 
 ## 📖 Exemplos Práticos
 
-Na pasta `/examples` você encontrará soluções detalhadas para problemas comuns de system design:
-
-1. **URL Shortener** ([01-url-shortener.md](examples/01-url-shortener.md))
-   - Sistema distribuído de encurtamento de URLs
-   - Foco em performance e disponibilidade
-   - Alta taxa de leitura vs escrita
-
-2. **Chat System** ([02-chat-system.md](examples/02-chat-system.md))
-   - Mensagens em tempo real
-   - Presença e status online
-   - Persistência e entrega garantida
-
-3. **Rate Limiter** ([03-rate-limiter.md](examples/03-rate-limiter.md))
-   - Controle de requisições
-   - Algoritmos de throttling
-   - Distribuição e sincronização
-
-4. **Twitter Feed** ([04-twitter-feed.md](examples/04-twitter-feed.md))
-   - Timeline em tempo real
-   - Fan-out e consistência
-   - Cache e performance
-
-5. **S3-like Storage** ([05-object-storage.md](examples/05-object-storage.md))
-   - Armazenamento distribuído
-   - Durabilidade e replicação
-   - Metadata e consistência
-
-6. **Payment System** ([06-payment-system.md](examples/06-payment-system.md))
-   - Processamento financeiro
-   - Consistência e atomicidade
-   - Segurança e compliance
-
-7. **Sistema de Busca** ([search-system.md](examples/search-system.md))
-   - Full-text search e indexação em tempo real
-   - Latência < 200ms para queries
-   - Ranking e relevância
-   - Sugestões de busca
-   - Analytics e caching
-
-8. **Cache Distribuído** ([distributed-cache.md](examples/distributed-cache.md))
-   - Performance < 1ms para operações
-   - 10M operações/segundo
-   - 1TB de dados em memória
-   - Pub/sub e estruturas de dados
-   - Consistência eventual
-   - Operações atômicas
-
-9. **Processamento de Logs** ([log-processing.md](examples/log-processing.md))
-   - Processamento de 100TB/dia
-   - Retenção de 90 dias
-   - Durabilidade 99.999999%
-   - Parsing e estruturação
-   - Indexação e busca
-   - Alertas e visualizações
-   - Latência de ingestão < 5s
-
-10. **Análise em Tempo Real** ([real-time-analytics.md](examples/real-time-analytics.md))
-    - 1M eventos/segundo
-    - 86TB/dia de dados processados
-    - Latência < 1s (p95)
-    - Stream processing
-    - Agregações em tempo real
-    - Dashboards interativos
-    - Alertas dinâmicos
-
-## 🎯 Template Base
-
-Na pasta `/templates` você encontrará um template estruturado para conduzir a entrevista:
-
-1. **Requisitos & Escopo**
-   - Perguntas chave
-   - Estimativas
-   - Restrições
-
-2. **Componentes & Interfaces**
-   - Serviços
-   - APIs
-   - Dados
-
-3. **Escalabilidade & Performance**
-   - Bottlenecks
-   - Soluções
-   - Trade-offs
-
-4. **Resiliência & Segurança**
-   - Falhas
-   - Mitigações
-   - Compliance
+| Sistema | Descrição |
+|---------|-----------|
+| [URL Shortener](examples/url-shortener.md) | Sistema distribuído de encurtamento de URLs com foco em performance e disponibilidade, alta taxa de leitura vs escrita |
+| [Chat System](examples/chat-system.md) | Mensagens em tempo real, presença e status online, persistência e entrega garantida |
+| [Rate Limiter](examples/auth-system.md) | Controle de requisições, algoritmos de throttling, distribuição e sincronização |
+| [Real-time Messaging](examples/real-time-messaging.md) | Timeline em tempo real, fan-out e consistência, cache e performance |
+| [Distributed Cache](examples/distributed-cache.md) | Armazenamento distribuído, durabilidade e replicação, metadata e consistência |
+| [Payment System](examples/payment-system.md) | Processamento financeiro, consistência e atomicidade, segurança e compliance |
+| [Search System](examples/search-system.md) | Full-text search e indexação em tempo real, latência < 200ms para queries, ranking e relevância, sugestões de busca, analytics e caching |
+| [Log Processing](examples/log-processing.md) | Processamento de 100TB/dia, retenção de 90 dias, durabilidade 99.99999%, parsing e estruturação, indexação e busca, alertas e visualizações, latência de ingestão < 5s |
+| [Real-time Analytics](examples/real-time-analytics.md) | 1M eventos/segundo, 86TB/dia de dados processados, latência < 1s (p95), stream processing, agregações em tempo real, dashboards interativos, alertas dinâmicos |
 
 ## 📊 Números Importantes
 
@@ -190,39 +113,6 @@ Na pasta `/templates` você encontrará um template estruturado para conduzir a 
 - Justificar decisões
 - Considerar custos
 
-## 📂 Estrutura do Projeto
-
-Este repositório contém templates e exemplos práticos para entrevistas de design de sistemas.
-
-## Estrutura
-
-```
-.
-├── templates/          # Templates base para entrevistas
-└── examples/          # Exemplos práticos de design de sistemas
-    ├── search-system.md     # Sistema de busca
-    └── distributed-cache.md # Cache distribuído
-```
-
-## Templates
-
-- [Template Base](templates/base-template.md) - Template básico para qualquer design de sistema
-
-## Exemplos
-
-- [Sistema de Busca](examples/search-system.md) - Design de um sistema de busca escalável
-- [Cache Distribuído](examples/distributed-cache.md) - Design de um sistema de cache distribuído
-
-## Como Usar
-
-1. Comece com o template base para estruturar seu pensamento
-2. Consulte os exemplos para inspiração e padrões comuns
-3. Adapte os designs conforme necessário para seu caso específico
-
-## Contribuindo
-
-Contribuições são bem-vindas! Por favor, abra uma issue ou pull request.
-
 ## 📚 Referências
 
 ### Livros Essenciais
@@ -230,8 +120,18 @@ Contribuições são bem-vindas! Por favor, abra uma issue ou pull request.
 1. **System Design Interview – An Insider's Guide** (2020)
    - Autor: Alex Xu
    - ISBN: 978-1736049105
+   - Referência fundamental para entrevistas de system design
+   - Aborda padrões e anti-padrões comuns
+   - Inclui casos de estudo detalhados
 
-2. **Designing Data-Intensive Applications** (2017)
+2. **System Design Interview – An Insider's Guide: Volume 2** (2022)
+   - Autor: Alex Xu
+   - ISBN: 978-1736049112
+   - Aprofundamento em tópicos avançados
+   - Novos casos de estudo e padrões
+   - Foco em escalabilidade e performance
+
+3. **Designing Data-Intensive Applications** (2017)
    - Autor: Martin Kleppmann
    - O'Reilly Media
    - ISBN: 978-1449373320

@@ -1,4 +1,4 @@
-# Design de Sistema: Plataforma de Pagamentos
+# 💳 Design de Sistema: Payment System
 
 ## 1. Requisitos & Escopo
 

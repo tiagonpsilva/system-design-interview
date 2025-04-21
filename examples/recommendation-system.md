@@ -1,4 +1,4 @@
-# Design de Sistema: Sistema de Recomendação
+# 🎯 Design de Sistema: Recommendation System
 
 ## 1. Requisitos & Escopo
 

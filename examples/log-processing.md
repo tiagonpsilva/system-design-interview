@@ -1,4 +1,4 @@
-# Design de Sistema: Sistema de Processamento de Logs
+# 📊 Design de Sistema: Sistema de Processamento de Logs
 
 ## 1. Requisitos & Escopo
 
