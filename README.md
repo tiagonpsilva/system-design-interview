@@ -248,4 +248,4 @@ Contribuições são bem-vindas! Por favor, abra uma issue ou pull request.
 
 3. **AWS Architecture Center**
    - [aws.amazon.com/architecture](https://aws.amazon.com/architecture)
-   - Padrões e práticas recomendadas
+   - Padrões e práticas recomendadas# system-design-interview
