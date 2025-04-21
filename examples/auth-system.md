@@ -1,4 +1,4 @@
-# 🔐 Sistema de Autenticação
+# Sistema de Autenticação
 
 ## Requisitos Funcionais
 

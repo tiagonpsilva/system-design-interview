@@ -1,4 +1,4 @@
-# 🗄️ Cache Distribuído
+# Cache Distribuído
 
 ## Requisitos Funcionais
 

@@ -1,4 +1,4 @@
-# 📊 Sistema de Processamento de Logs
+# Sistema de Processamento de Logs
 
 ## Requisitos Funcionais
 

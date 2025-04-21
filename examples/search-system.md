@@ -1,4 +1,4 @@
-# 🔍 Sistema de Busca
+# Sistema de Busca
 
 ## Requisitos Funcionais
 

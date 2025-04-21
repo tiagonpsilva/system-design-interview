@@ -1,4 +1,4 @@
-# ⚡ Sistema de Mensagens em Tempo Real
+# Sistema de Mensagens em Tempo Real
 
 ## Requisitos Funcionais
 

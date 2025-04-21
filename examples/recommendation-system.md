@@ -1,4 +1,4 @@
-# 🎯 Sistema de Recomendação
+# Sistema de Recomendação
 
 ## Requisitos Funcionais
 
