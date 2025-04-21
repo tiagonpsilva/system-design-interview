@@ -1,89 +1,286 @@
-# Sistema de Chat
+# 💬 Design de Sistema: Chat System
 
-## 1. Requisitos
+```mermaid
+graph TD
+    subgraph Clients
+        A[Mobile App]
+        B[Web App]
+        C[Desktop App]
+    end
 
-### Funcionais
-- Mensagens 1:1
-- Grupos de chat
-- Histórico de mensagens
-- Indicador de status
-- Notificações
+    subgraph Load Balancer
+        D[HAProxy/NGINX]
+    end
 
-### Não Funcionais
-- Baixa latência (<100ms)
-- Alta disponibilidade (99.99%)
-- Consistência eventual
-- Entrega garantida
+    subgraph Connection Layer
+        E[WebSocket Service]
+        F[Presence Service]
+    end
 
-## 2. Estimativas
+    subgraph Application Layer
+        G[Chat Service]
+        H[Media Service]
+        I[Notification Service]
+        J[Search Service]
+    end
 
-### Tráfego
-- 1M usuários ativos diários
-- 10M mensagens/dia
-- Pico de 1k mensagens/segundo
+    subgraph Message Queue
+        K[RabbitMQ]
+    end
 
-### Armazenamento
-- Mensagem média: 1KB
-- Total diário: 10M * 1KB = 10GB
-- Total anual: 3.65TB
+    subgraph Storage Layer
+        L[(Cassandra - Messages)]
+        M[(Redis - Presence)]
+        N[(Elasticsearch - Search)]
+        O[S3/GCS - Media]
+    end
 
-## 3. Design do Sistema
+    subgraph External Services
+        P[FCM/APNS]
+        Q[CDN]
+    end
 
-### Componentes Principais
-1. Serviço de Mensagens
-2. Serviço de Presença
-3. Serviço de Notificações
-4. Banco de Dados
-5. Cache Distribuído
+    A & B & C --> D
+    D --> E
+    D --> F
+    E --> G
+    E --> F
+    G --> K
+    K --> I
+    G --> H
+    G --> J
+    H --> O
+    J --> N
+    G --> L
+    F --> M
+    I --> P
+    O --> Q
+    Q --> A & B & C
+```
 
-### Fluxo de Dados
-1. Cliente conecta via WebSocket
-2. Mensagem enviada ao servidor
-3. Mensagem processada e armazenada
-4. Notificação enviada aos destinatários
-5. Mensagem entregue via WebSocket
+## 1. Requisitos & Escopo
 
-## 4. Tecnologias Sugeridas
+### 1.1 Perguntas Chave
+- [x] Objetivo principal: Sistema de mensagens em tempo real
+- [x] Usuários principais: Usuários finais, Grupos, Empresas
+- [x] Volume: 50M usuários ativos, 1B mensagens/dia
+- [x] Latência: < 100ms para entrega
+- [x] Tipos: 1:1, Grupos, Canais
 
-### Backend
-- Node.js/Socket.io
-- Spring WebFlux
-- Go
+### 1.2 Requisitos Funcionais
+- [x] Mensagens 1:1
+- [x] Grupos (até 1000 membros)
+- [x] Canais (ilimitados)
+- [x] Status online/offline
+- [x] Indicador de digitação
+- [x] Entrega garantida
+- [x] Histórico de mensagens
+- [x] Mídia (imagens, vídeos, arquivos)
 
-### Banco de Dados
-- MongoDB (mensagens)
-- Redis (cache/presença)
-- Cassandra (histórico)
+### 1.3 Requisitos Não-Funcionais
+- [x] Disponibilidade: 99.99%
+- [x] Latência: < 100ms p95
+- [x] Consistência: Eventual
+- [x] Durabilidade: 100%
+- [x] Escalabilidade: Horizontal
+- [x] Segurança: E2E encryption
 
-### Mensageria
-- Kafka
-- RabbitMQ
+### 1.4 Estimativas
+- [x] DAU: 50M
+- [x] Mensagens: ~1B/dia
+- [x] Storage: 100KB/user/dia * 50M = 5TB/dia
+- [x] Conexões: 5M concurrent
+- [x] Bandwidth: 1MB/user/dia * 50M = 50TB/dia
 
-## 5. Considerações
+### 1.5 Restrições & Limitações
+- [x] Tamanho máximo mensagem: 100KB
+- [x] Retenção: 90 dias (free), 7 anos (premium)
+- [x] Limite upload: 100MB/arquivo
+- [x] Rate limiting por usuário
+- [x] Compliance com GDPR
 
-### Escalabilidade
-- Sharding por usuário/grupo
-- Caching em múltiplas camadas
-- Load balancing
+## 2. Design de Alto Nível
 
-### Confiabilidade
-- Persistência de mensagens
-- Recuperação de falhas
-- Replicação de dados
+### 2.1 Componentes Principais
+- [x] Connection Service (WebSocket)
+- [x] Chat Service
+- [x] Presence Service
+- [x] Media Service
+- [x] Notification Service
+- [x] Storage Service
+- [x] Search Service
 
-### Performance
-- Otimização de WebSocket
-- Compressão de mensagens
-- Lazy loading
+### 2.2 Fluxos de Dados
+```mermaid
+graph LR
+    A[API] --> B[Orchestrator]
+    B --> C[Account]
+    B --> D[Transaction]
+    D --> E[Fraud Check]
+    D --> F[Payment Gateway]
+    F --> G[Acquirer]
+    D --> H[Notification]
+```
 
-## 6. Trade-offs
+### 2.3 APIs & Interfaces
+```typescript
+interface IChatService {
+  sendMessage(msg: Message): Promise<MessageId>;
+  getMessages(chatId: string, options: PaginationOptions): Promise<Message[]>;
+  createGroup(group: GroupInfo): Promise<GroupId>;
+  joinGroup(groupId: string, userId: string): Promise<void>;
+  setTyping(chatId: string, isTyping: boolean): Promise<void>;
+}
 
-### Prós
-- Baixa latência
-- Escalável
-- Confiável
+interface Message {
+  id: string;
+  chatId: string;
+  senderId: string;
+  content: MessageContent;
+  timestamp: Date;
+  status: MessageStatus;
+}
 
-### Contras
-- Complexidade do sistema
-- Custo de infraestrutura
-- Desafios de consistência
+interface MessageContent {
+  type: 'text' | 'image' | 'video' | 'file';
+  text?: string;
+  mediaUrl?: string;
+  metadata?: Record<string, any>;
+}
+
+interface GroupInfo {
+  name: string;
+  description?: string;
+  members: string[];
+  type: 'private' | 'public';
+  metadata?: Record<string, any>;
+}
+```
+
+### 2.4 Modelo de Dados
+- [x] Messages Collection (Cassandra)
+```sql
+CREATE TABLE messages (
+  chat_id uuid,
+  message_id timeuuid,
+  sender_id uuid,
+  content text,
+  media_urls list<text>,
+  created_at timestamp,
+  updated_at timestamp,
+  status text,
+  PRIMARY KEY ((chat_id), message_id)
+) WITH CLUSTERING ORDER BY (message_id DESC);
+
+CREATE TABLE chat_users (
+  chat_id uuid,
+  user_id uuid,
+  joined_at timestamp,
+  role text,
+  last_read_message_id timeuuid,
+  PRIMARY KEY ((chat_id), user_id)
+);
+```
+
+## 3. Design Detalhado
+
+### 3.1 Tecnologias Específicas
+- [x] Backend: Node.js/TypeScript
+- [x] WebSocket: Socket.io/WS
+- [x] Database: Cassandra + Redis
+- [x] Queue: RabbitMQ
+- [x] Search: Elasticsearch
+- [x] Storage: S3/GCS
+- [x] CDN: CloudFront
+- [x] Push: FCM/APNS
+
+### 3.2 Padrões de Design
+- [x] Publisher/Subscriber
+- [x] Event Sourcing
+- [x] CQRS para busca
+- [x] Circuit Breaker
+- [x] Rate Limiting
+- [x] Backpressure handling
+
+### 3.3 Trade-offs
+| Decisão | Prós | Contras | Justificativa |
+|---------|------|---------|---------------|
+| WebSocket vs HTTP | Real-time, Eficiente | Complexo, Stateful | Necessidade de real-time |
+| Cassandra vs MongoDB | Escala linear | Queries limitadas | Volume de writes |
+| P2P vs Server | Privacidade | Complexidade | Controle e features |
+
+## 4. Escalabilidade
+
+### 4.1 Gargalos
+- [x] Conexões WebSocket
+- [x] Fanout de mensagens
+- [x] Hot users/groups
+- [x] Busca em histórico
+
+### 4.2 Soluções
+- [x] Connection pooling
+- [x] Message queuing
+- [x] Sharding por chat_id
+- [x] Caching em camadas
+- [x] Read replicas
+
+### 4.3 Custos
+- [x] Infra: ~$50k/mês
+  - Compute: $20k
+  - Storage: $15k
+  - Network: $10k
+  - Outros: $5k
+
+## 5. Resiliência
+
+### 5.1 Pontos de Falha
+- [x] Conexão WebSocket
+- [x] Database overload
+- [x] Queue overflow
+- [x] Network partition
+
+### 5.2 Mitigações
+- [x] Auto-reconnect
+- [x] Message persistence
+- [x] Circuit breakers
+- [x] Multi-region
+- [x] Graceful degradation
+
+### 5.3 Monitoramento
+- [x] Métricas
+  - Latência de mensagens
+  - Connected users
+  - Message rate
+  - Error rate
+- [x] Tracing distribuído
+- [x] Health checks
+- [x] Alertas em tempo real
+
+## 6. Evolução
+
+### 6.1 MVP
+- [x] Chat 1:1
+- [x] Grupos básicos
+- [x] Texto e imagens
+- [x] Presença básica
+
+### 6.2 Melhorias Futuras
+- [ ] Video calls
+- [ ] File sharing
+- [ ] Message reactions
+- [ ] Rich messages
+- [ ] Bots platform
+
+### 6.3 Alternativas Consideradas
+- [ ] GraphQL Subscriptions
+- [ ] MQTT
+- [ ] gRPC Streaming
+- [ ] Matrix Protocol
+
+## Notas & Observações
+
+- Priorizar UX em decisões técnicas
+- Considerar latência global
+- Implementar retry com backoff
+- Monitorar uso de recursos
+- Planejar para crescimento 10x
