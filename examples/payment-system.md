@@ -1,193 +1,89 @@
-# 💳 Design de Sistema: Payment System
+# Sistema de Pagamento
 
-## 1. Requisitos & Escopo
+## 1. Requisitos
 
-### 1.1 Perguntas Chave
-- [x] Objetivo principal: Processamento seguro de pagamentos
-- [x] Usuários principais: Compradores, Vendedores
-- [x] Volume: 1M transações/dia
-- [x] Latência: < 2s para autorização
-- [x] Custo: Otimizado para confiabilidade
+### Funcionais
+- Processamento de pagamentos
+- Múltiplos métodos
+- Histórico de transações
+- Notificações
+- Reembolsos
 
-### 1.2 Requisitos Funcionais
-- [x] Processamento de pagamentos
-- [x] Múltiplos métodos de pagamento
-- [x] Histórico de transações
-- [x] Reembolsos e chargebacks
-- [x] Relatórios financeiros
+### Não Funcionais
+- Alta disponibilidade (99.999%)
+- Segurança robusta
+- Consistência forte
+- Latência <2s
 
-### 1.3 Requisitos Não-Funcionais
-- [x] Disponibilidade: 99.999%
-- [x] Escalabilidade: Horizontal
-- [x] Latência: < 2s p99
-- [x] Consistência: Forte
-- [x] Durabilidade: 100%
+## 2. Estimativas
 
-### 1.4 Estimativas
-- [x] DAU: 100k merchants
-- [x] TPS: ~100 transactions/s
-- [x] Storage: ~1KB/tx * 1M = 1GB/dia
-- [x] Bandwidth: ~2KB/tx * 1M = 2GB/dia
-- [x] Concorrência: ~1000 tx/s pico
+### Tráfego
+- 1M transações/dia
+- Pico de 100 TPS
+- 10M usuários ativos
 
-### 1.5 Restrições & Limitações
-- [x] PCI DSS compliance
-- [x] Regulações financeiras
-- [x] Multi-moeda
-- [x] Fraude < 0.1%
+### Armazenamento
+- Transação: 1KB
+- Total diário: 1GB
+- Histórico: 1TB
 
-## 2. Design de Alto Nível
+## 3. Design do Sistema
 
-### 2.1 Componentes Principais
-- [x] Payment Gateway
-- [x] Transaction Service
-- [x] Account Service
-- [x] Fraud Detection
-- [x] Reporting Service
-- [x] Notification Service
+### Componentes Principais
+1. Payment Gateway
+2. Processador de Transações
+3. Fraud Detection
+4. Ledger System
+5. Notification Service
 
-### 2.2 Fluxos de Dados
-- [x] Pagamento: Gateway → Transaction → Account
-- [x] Fraude: Async check via ML
-- [x] Relatórios: Batch processing
-- [x] Notificações: Event-driven
+### Fluxo de Dados
+1. Requisição de pagamento
+2. Validação e anti-fraude
+3. Processamento
+4. Registro contábil
+5. Notificação
 
-### 2.3 APIs & Interfaces
-```typescript
-interface IPaymentService {
-  authorize(payment: PaymentRequest): Promise<AuthResult>;
-  capture(authId: string): Promise<CaptureResult>;
-  refund(txId: string, amount: Money): Promise<RefundResult>;
-  void(authId: string): Promise<VoidResult>;
-}
+## 4. Tecnologias Sugeridas
 
-interface IAccountService {
-  getBalance(accountId: string): Promise<Balance>;
-  hold(accountId: string, amount: Money): Promise<HoldResult>;
-  transfer(from: string, to: string, amount: Money): Promise<TransferResult>;
-}
+### Backend
+- Java/Spring
+- Go
+- Node.js
 
-interface PaymentRequest {
-  merchantId: string;
-  amount: Money;
-  currency: string;
-  paymentMethod: PaymentMethod;
-  metadata: Map<string, string>;
-}
+### Banco de Dados
+- PostgreSQL
+- MongoDB
+- Redis
 
-interface Money {
-  amount: number;
-  currency: string;
-}
-```
+### Mensageria
+- Kafka
+- RabbitMQ
 
-### 2.4 Modelo de Dados
-- [x] Transactions Table
-  ```sql
-  CREATE TABLE transactions (
-    id UUID PRIMARY KEY,
-    merchant_id UUID,
-    amount DECIMAL,
-    currency VARCHAR(3),
-    status VARCHAR(20),
-    created_at TIMESTAMP,
-    payment_method JSONB,
-    metadata JSONB
-  );
-  CREATE INDEX idx_merchant_time ON transactions(merchant_id, created_at);
-  ```
-- [x] Particionamento: Por merchant_id
-- [x] Replicação: Multi-região sync
+## 5. Considerações
 
-## 3. Design Detalhado
+### Segurança
+- Criptografia
+- Tokenização
+- PCI Compliance
 
-### 3.1 Tecnologias Específicas
-- [x] Backend: Java/Kotlin
-- [x] Database: PostgreSQL
-- [x] Cache: Redis
-- [x] Queue: RabbitMQ
-- [x] Search: Elasticsearch
+### Confiabilidade
+- Idempotência
+- Consistência
+- Disaster Recovery
 
-### 3.2 Padrões de Design
-- [x] SAGA para transações
-- [x] CQRS para relatórios
-- [x] Circuit Breaker
-- [x] Rate Limiting
+### Performance
+- Caching
+- Async Processing
+- Load Balancing
 
-### 3.3 Trade-offs
-| Decisão | Prós | Contras | Justificativa |
-|---------|------|---------|---------------|
-| SQL | ACID, Schemas | Custo de escala | Consistência crítica |
-| Sync Replication | Consistência | Latência | Requisito regulatório |
-| SAGA | Isolamento | Complexidade | Necessário para atomicidade |
+## 6. Trade-offs
 
-## 4. Escalabilidade
+### Prós
+- Alta segurança
+- Confiabilidade
+- Rastreabilidade
 
-### 4.1 Gargalos
-- [x] DB writes
-- [x] Payment gateway
-- [x] Fraud checks
-- [x] Reporting queries
-
-### 4.2 Soluções
-- [x] Write-through cache
-- [x] Gateway pooling
-- [x] Async fraud checks
-- [x] CQRS para relatórios
-
-### 4.3 Custos
-- [x] Infra: ~$50k/mês
-  - Compute: $20k
-  - Storage: $10k
-  - Network: $10k
-  - Segurança: $10k
-
-## 5. Resiliência
-
-### 5.1 Pontos de Falha
-- [x] Gateway timeout
-- [x] DB failure
-- [x] Network partition
-- [x] Service crash
-
-### 5.2 Mitigações
-- [x] Multiple gateways
-- [x] Multi-region DB
-- [x] Circuit breakers
-- [x] Idempotency
-
-### 5.3 Monitoramento
-- [x] Métricas
-  - Transaction success rate
-  - Latency p95/p99
-  - Error rates
-  - Fraud rates
-- [x] Alertas para anomalias
-- [x] Audit logging
-- [x] Transaction tracing
-
-## 6. Evolução
-
-### 6.1 MVP
-- [x] Basic payments
-- [x] Core reporting
-- [x] Simple fraud rules
-- [x] Basic notifications
-
-### 6.2 Melhorias Futuras
-- [ ] ML fraud detection
-- [ ] Real-time analytics
-- [ ] Enhanced reporting
-- [ ] More payment methods
-
-### 6.3 Alternativas Consideradas
-- [ ] NoSQL database
-- [ ] Serverless architecture
-- [ ] GraphQL API
-
-## Notas & Observações
-
-- Regular security audits
-- Compliance reviews
-- Disaster recovery tests
-- Performance optimization
+### Contras
+- Complexidade
+- Custo operacional
+- Overhead regulatório
