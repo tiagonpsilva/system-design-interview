@@ -1,12 +1,12 @@
-# 🎯 System Design Interview
+# 🏗 System Design Interview
 
-## 🤔 O que é System Design Interview?
+## 🔤 O que é System Design Interview?
 
 System Design Interview é uma etapa crucial no processo de entrevistas técnicas, especialmente para posições sênior e de arquitetura. Neste tipo de entrevista, o candidato é desafiado a projetar um sistema complexo em tempo real, demonstrando conhecimento em escalabilidade, confiabilidade, performance e trade-offs arquiteturais.
 
 Este repositório oferece uma abordagem estruturada para preparação e condução de entrevistas de system design, inspirada na simplicidade e eficácia do formato Architecture Haiku, mas adaptada para o contexto de entrevistas.
 
-## 📝 O Desafio das Entrevistas de System Design
+## 🔝 O Desafio das Entrevistas de System Design
 
 Entrevistas de system design são desafiadoras por várias razões:
 
@@ -15,7 +15,7 @@ Entrevistas de system design são desafiadoras por várias razões:
 3. **Múltiplas Soluções**: Não existe uma única resposta correta
 4. **Profundidade vs Amplitude**: Equilibrar detalhamento com visão geral
 
-## 💡 Nossa Abordagem
+## 🎡 Nossa Abordagem
 
 ### Princípios Fundamentais
 
@@ -34,7 +34,7 @@ Entrevistas de system design são desafiadoras por várias razões:
    - Evoluir com justificativas
    - Refinar com feedback
 
-## 📚 Framework de 6 Passos
+## 🔚 Framework de 6 Passos
 
 ### 1. Requisitos (5-10 min)
 - Funcionais
@@ -85,7 +85,7 @@ Entrevistas de system design são desafiadoras por várias razões:
 
 ### Latência
 - Memory: 100ns
-- SSD: 100μs
+- SSD: 100µs
 - Network (same region): 1ms
 - Network (cross-region): 100ms
 
@@ -148,4 +148,4 @@ Entrevistas de system design são desafiadoras por várias razões:
 
 3. **AWS Architecture Center**
    - [aws.amazon.com/architecture](https://aws.amazon.com/architecture)
-   - Padrões e práticas recomendadas# system-design-interview
+   - Padrões e práticas recomendadas
