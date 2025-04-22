@@ -15,7 +15,7 @@ Entrevistas de system design são desafiadoras por várias razões:
 3. **Múltiplas Soluções**: Não existe uma única resposta correta
 4. **Profundidade vs Amplitude**: Equilibrar detalhamento com visão geral
 
-## 🎡 Nossa Abordagem
+## 🎡 Abordagem
 
 ### Princípios Fundamentais
 
@@ -81,23 +81,6 @@ Entrevistas de system design são desafiadoras por várias razões:
 | [Log Processing](examples/log-processing.md) | Processamento de 100TB/dia, retenção de 90 dias, durabilidade 99.99999%, parsing e estruturação, indexação e busca, alertas e visualizações, latência de ingestão < 5s |
 | [Real-time Analytics](examples/real-time-analytics.md) | 1M eventos/segundo, 86TB/dia de dados processados, latência < 1s (p95), stream processing, agregações em tempo real, dashboards interativos, alertas dinâmicos |
 
-## 📊 Números Importantes
-
-### Latência
-- Memory: 100ns
-- SSD: 100µs
-- Network (same region): 1ms
-- Network (cross-region): 100ms
-
-### Throughput
-- SSD: 500MB/s
-- Network: 1Gbps
-- Memory: 10GB/s
-
-### Capacidade
-- Server RAM: 256GB
-- Server Storage: 10TB
-- Network/day: 1PB
 
 ## 🚫 Anti-Padrões
 
